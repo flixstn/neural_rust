@@ -58,28 +58,19 @@ pub fn transpose(v: &Vec<Vec<f32>>) -> Vec<Vec<f32>> {
       }
     }
     result
-  }
+}
 
-fn main() {
+fn run(input: &Vec<Vec<f32>>, output: &Vec<Vec<f32>>) -> Vec<Vec<f32>> {
     let mut rng = rand::thread_rng();
-
-    let input: Vec<Vec<f32>> = vec![vec![0.,0.,1.],
-                                    vec![1.,1.,1.],
-                                    vec![1.,0.,1.],
-                                    vec![0.,1.,1.]];
-    
-    let output: Vec<Vec<f32>> = vec![vec![0.],
-                                      vec![1.],
-                                      vec![1.],
-                                      vec![0.]];
-
+    let mut output_l1 = Vec::<Vec<f32>>::new();
     let mut l_1 = Vec::new();
-    for _i in 0..input[0].len() {
+    
+    for _ in 0..input[0].len() {
         l_1.push(vec![rng.gen_range(-0.5, 0.5)]);
     }
     
-    for i in 0..10000 {
-        let output_l1 = sigmoid(&multiply(&input, &l_1));
+    for _ in 0..10000 {
+        output_l1 = sigmoid(&multiply(&input, &l_1));
         let error = calculate_error(&output, &output_l1);
 
         let adjustment = {
@@ -104,9 +95,23 @@ fn main() {
             }
             matrix
         }; 
-
-        if i == 9999 {
-            println!("{:?}", output_l1);
-        }
     }
+
+    output_l1
+}
+
+fn main() {
+    let input: Vec<Vec<f32>> = vec![vec![0.,0.,1.],
+                                    vec![1.,1.,1.],
+                                    vec![1.,0.,1.],
+                                    vec![0.,1.,1.]];
+    
+    let output: Vec<Vec<f32>> = vec![vec![0.],
+                                     vec![1.],
+                                     vec![1.],
+                                     vec![0.]];
+
+    let result = run(&input, &output);
+
+    println!("{:?}", result);
 }
